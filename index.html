@@ -31,6 +31,9 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* Texto 30% más grande globalmente (1rem = 20.8px en lugar de 16px) */
+  html { font-size: 130%; }
+
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--blue-bg);
@@ -43,13 +46,13 @@
   /* HEADER */
   header {
     background: var(--white);
-    padding: 16px 20px;
+    padding: 18px 20px;
     box-shadow: var(--shadow);
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  header img { height: 42px; }
+  header img { height: 64px; }
 
   /* CONTAINER */
   .container {
@@ -167,7 +170,14 @@
     font-size: 0.85rem;
   }
   .totals .row { display: flex; justify-content: space-between; }
-  .totals .row.total { font-weight: 700; font-size: 1rem; color: var(--blue-dark); margin-top: 4px; }
+  .totals .row.total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--green-dark);
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 2px solid var(--green);
+  }
 
   /* WARN */
   .warn {
@@ -349,6 +359,14 @@
   .btn-verde:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(139,195,74,0.4); }
   .btn-verde:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
+  /* Variante para botón principal de llamada a la acción */
+  .btn-cta {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 1.05rem;
+    padding: 16px;
+  }
+
   .btn-secundario {
     background: transparent;
     color: var(--blue-dark);
@@ -508,7 +526,7 @@
         <strong>⚠ Ayuno requerido:</strong> Algunos de tus exámenes requieren ayuno de 8 a 12 horas. Solo puedes tomar agua durante ese tiempo.
       </div>
 
-      <button class="btn btn-primario" onclick="goTo('p2')">Comenzar agendamiento</button>
+      <button class="btn btn-verde btn-cta" onclick="goTo('p2')">Comenzar agendamiento</button>
     </div>
   </section>
 
