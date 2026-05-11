@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda tu cita - Domitest</title>
+<link rel="icon" href="logo.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Sora:wght@400;600;700&display=swap');
+
+  :root {
+    --blue: #5B9AB8;
+    --blue-dark: #4a839f;
+    --blue-light: #e8f3f8;
+    --blue-bg: #f0f5f8;
+    --green: #8BC34A;
+    --green-dark: #73a33a;
+    --green-light: #f1f8e4;
+    --gray: #f5f7fa;
+    --text: #1e2a35;
+    --text-muted: #7a8a96;
+    --border: #dde5ea;
+    --white: #ffffff;
+    --warn-bg: #fff8e1;
+    --warn-border: #f0c040;
+    --warn-text: #856f00;
+    --error: #c0392b;
+    --shadow: 0 2px 12px rgba(91,154,184,0.10);
+    --shadow-lg: 0 8px 32px rgba(91,154,184,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--blue-bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--white);
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  header img { height: 42px; }
+
+  /* CONTAINER */
+  .container {
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
+
+  /* STEP INDICATOR */
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .step-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+  }
+  .step-dot.active {
+    background: var(--blue);
+    width: 28px;
+    border-radius: 4px;
+  }
+  .step-dot.done {
+    background: var(--green);
+  }
+
+  /* CARD */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 22px;
+    box-shadow: var(--shadow);
+  }
+
+  /* HEADINGS */
+  h1 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  h2 {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--blue-dark);
+    margin-bottom: 14px;
+  }
+  .subtitle {
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 22px;
+    font-size: 0.95rem;
+  }
+  .subtitle-left {
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+  }
+
+  /* RESUMEN COTIZACION */
+  .cot-summary {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .cot-summary .label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--blue-dark);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .cot-summary .code {
+    font-family: 'Sora', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+  }
+  .exam-list-summary {
+    list-style: none;
+    margin-bottom: 8px;
+  }
+  .exam-list-summary li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(91,154,184,0.18);
+    font-size: 0.88rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .exam-list-summary li:last-child { border-bottom: none; }
+  .exam-list-summary .ex-name { color: var(--text); }
+  .exam-list-summary .ex-price { color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+
+  .totals {
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 2px solid var(--blue);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.85rem;
+  }
+  .totals .row { display: flex; justify-content: space-between; }
+  .totals .row.total { font-weight: 700; font-size: 1rem; color: var(--blue-dark); margin-top: 4px; }
+
+  /* WARN */
+  .warn {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    font-size: 0.88rem;
+    color: var(--warn-text);
+  }
+  .warn strong { color: #6b5500; }
+
+  /* FORM */
+  label.field-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+  }
+  label.field-label .opt {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.78rem;
+  }
+  input[type="text"], input[type="tel"], input[type="date"], textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: var(--text);
+    transition: border-color 0.15s;
+    margin-bottom: 14px;
+    background: var(--white);
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+  }
+  textarea { resize: vertical; min-height: 70px; }
+
+  /* DAY CHIPS */
+  .dias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .dia-chip {
+    padding: 10px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--white);
+    user-select: none;
+  }
+  .dia-chip:hover { border-color: var(--blue); }
+  .dia-chip.selected {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--white);
+  }
+  .dia-chip .dia-nombre {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 2px;
+    letter-spacing: 0.04em;
+  }
+  .dia-chip.selected .dia-nombre { color: rgba(255,255,255,0.85); }
+  .dia-chip .dia-numero {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+  .dia-chip .dia-mes {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .dia-chip.selected .dia-mes { color: rgba(255,255,255,0.85); }
+
+  /* SLOT OPTIONS */
+  .franjas {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 18px;
+  }
+  .franja-opcion {
+    padding: 13px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .franja-opcion:hover { border-color: var(--blue); }
+  .franja-opcion.selected {
+    border-color: var(--blue);
+    background: var(--blue-light);
+  }
+  .franja-icono {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--blue-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .franja-opcion.selected .franja-icono { background: var(--blue); color: var(--white); }
+  .franja-info { flex: 1; }
+  .franja-nombre { font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 0.93rem; }
+  .franja-horas { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* PAGO */
+  .pago-opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 12px;
+  }
+  .pago-opcion {
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--white);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .pago-opcion:hover { border-color: var(--green); }
+  .pago-opcion.selected {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green-dark);
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 0.97rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 6px;
+  }
+  .btn-primario {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(91,154,184,0.3);
+  }
+  .btn-primario:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(91,154,184,0.4); }
+  .btn-primario:active { transform: translateY(0); }
+  .btn-primario:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-verde {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(139,195,74,0.3);
+  }
+  .btn-verde:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(139,195,74,0.4); }
+  .btn-verde:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-secundario {
+    background: transparent;
+    color: var(--blue-dark);
+    border: 1.5px solid var(--border);
+    margin-top: 10px;
+  }
+  .btn-secundario:hover { border-color: var(--blue); }
+
+  /* SCREENS */
+  .pantalla { display: none; }
+  .pantalla.activa { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* CONFIRMATION SCREEN */
+  .icon-check {
+    width: 76px; height: 76px;
+    margin: 0 auto 14px;
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; color: var(--white);
+    box-shadow: 0 4px 14px rgba(139,195,74,0.3);
+  }
+  .resumen-cita {
+    background: var(--blue-light);
+    border-radius: 11px;
+    padding: 18px;
+    margin: 18px 0;
+  }
+  .resumen-cita .fila {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(91,154,184,0.18);
+    font-size: 0.88rem;
+    gap: 12px;
+  }
+  .resumen-cita .fila:last-child { border-bottom: none; }
+  .resumen-cita .fila .key { color: var(--text-muted); }
+  .resumen-cita .fila .val { font-weight: 700; color: var(--blue-dark); text-align: right; }
+
+  .nota {
+    background: #E8F4FD;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.88rem;
+    color: var(--blue-dark);
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  /* LOADING & ERROR */
+  .loading-box {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .spinner {
+    width: 44px; height: 44px;
+    border: 4px solid var(--blue-light);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-box {
+    text-align: center;
+    padding: 50px 20px;
+  }
+  .error-box .icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 16px;
+    background: #fdecea;
+    color: var(--error);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+  }
+  .error-box h2 { color: var(--error); margin-bottom: 8px; }
+  .error-box p { color: var(--text-muted); margin-bottom: 20px; }
+  .btn-wa-help {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #25D366;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+  }
+  .btn-wa-help:hover { background: #1DA851; }
+
+  @media (max-width: 480px) {
+    .container { padding: 16px 12px 80px; }
+    .card { padding: 22px 18px; }
+    h1 { font-size: 1.35rem; }
+    .pago-opciones { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Domitest">
+</header>
+
+<main class="container">
+
+  <!-- LOADING -->
+  <section id="loading" class="pantalla activa">
+    <div class="card loading-box">
+      <div class="spinner"></div>
+      <p style="color: var(--text-muted);">Cargando tu cotización...</p>
+    </div>
+  </section>
+
+  <!-- ERROR -->
+  <section id="error" class="pantalla">
+    <div class="card error-box">
+      <div class="icon">⚠</div>
+      <h2>No encontramos tu cotización</h2>
+      <p id="errorMsg">El link parece estar roto o expirado. Por favor verifica que estés usando el link que te enviamos por WhatsApp.</p>
+      <a class="btn-wa-help" href="https://wa.me/573005331667?text=Hola%20Domitest%2C%20mi%20link%20de%20agendamiento%20no%20funciona.%20%C2%BFMe%20pueden%20ayudar%3F" target="_blank">
+        💬 Escribirnos por WhatsApp
+      </a>
+    </div>
+  </section>
+
+  <!-- PANTALLA 1: BIENVENIDA -->
+  <section id="p1" class="pantalla">
+    <div class="card">
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <h1 id="welcomeTitle">Hola</h1>
+      <p class="subtitle">Agenda tu toma de muestra a domicilio</p>
+
+      <div class="cot-summary">
+        <div class="label">Tu cotización</div>
+        <div class="code" id="quoteCode">DT-XXXXX</div>
+        <ul class="exam-list-summary" id="examList"></ul>
+        <div class="totals">
+          <div class="row"><span>Subtotal exámenes</span><span id="subtotalExams">$0</span></div>
+          <div class="row"><span>Domicilio (<span id="zoneName">-</span>)</span><span id="zonePrice">$0</span></div>
+          <div class="row total"><span>TOTAL</span><span id="totalAmount">$0</span></div>
+        </div>
+      </div>
+
+      <div class="warn" id="fastingWarn" style="display:none;">
+        <strong>⚠ Ayuno requerido:</strong> Algunos de tus exámenes requieren ayuno de 8 a 12 horas. Solo puedes tomar agua durante ese tiempo.
+      </div>
+
+      <button class="btn btn-primario" onclick="goTo('p2')">Comenzar agendamiento</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 2: PREFERENCIAS -->
+  <section id="p2" class="pantalla">
+    <div class="card">
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <h2>¿Cuándo te gustaría?</h2>
+      <p class="subtitle-left">Elige uno o más días que te sirvan. Te confirmaremos el día y hora exacta por WhatsApp.</p>
+
+      <label class="field-label">Días que te sirven</label>
+      <div class="dias-grid" id="diasGrid"></div>
+
+      <label class="field-label">Franja horaria preferida</label>
+      <div class="franjas">
+        <div class="franja-opcion" data-slot="morning" onclick="seleccionarFranja(this)">
+          <div class="franja-icono">🌅</div>
+          <div class="franja-info">
+            <div class="franja-nombre">Mañana</div>
+            <div class="franja-horas">6:00 AM – 11:00 AM</div>
+          </div>
+        </div>
+        <div class="franja-opcion" data-slot="noon" onclick="seleccionarFranja(this)">
+          <div class="franja-icono">☀️</div>
+          <div class="franja-info">
+            <div class="franja-nombre">Mediodía</div>
+            <div class="franja-horas">11:00 AM – 2:00 PM</div>
+          </div>
+        </div>
+        <div class="franja-opcion" data-slot="afternoon" onclick="seleccionarFranja(this)">
+          <div class="franja-icono">🌙</div>
+          <div class="franja-info">
+            <div class="franja-nombre">Tarde</div>
+            <div class="franja-horas">2:00 PM – 6:00 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primario" onclick="continuarP3()">Continuar</button>
+      <button class="btn btn-secundario" onclick="goTo('p1')">Atrás</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 3: DATOS -->
+  <section id="p3" class="pantalla">
+    <div class="card">
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <h2>Tus datos</h2>
+      <p class="subtitle-left">Necesitamos esta información para que el auxiliar llegue a tu casa.</p>
+
+      <label class="field-label">Nombre completo *</label>
+      <input type="text" id="patName" placeholder="María Pérez García" autocomplete="name">
+
+      <label class="field-label">Documento de identidad *</label>
+      <input type="text" id="patDoc" placeholder="1.234.567.890" inputmode="numeric">
+
+      <label class="field-label">Fecha de nacimiento *</label>
+      <input type="date" id="patBirth">
+
+      <label class="field-label">Dirección completa (incluye bloque y apto) *</label>
+      <textarea id="patAddress" placeholder="Cra 80 #45-23, Bloque 4, Apto 502, Laureles, Medellín"></textarea>
+
+      <label class="field-label">Teléfono principal *</label>
+      <input type="tel" id="patPhone1" placeholder="300 123 4567" inputmode="tel" autocomplete="tel">
+
+      <label class="field-label">Segundo teléfono <span class="opt">(opcional)</span></label>
+      <input type="tel" id="patPhone2" placeholder="601 234 5678" inputmode="tel">
+
+      <label class="field-label">Forma de pago *</label>
+      <div class="pago-opciones">
+        <div class="pago-opcion" data-pay="cash" onclick="seleccionarPago(this)">💵 Efectivo</div>
+        <div class="pago-opcion" data-pay="transfer" onclick="seleccionarPago(this)">📱 Transferencia</div>
+      </div>
+
+      <button class="btn btn-verde" id="btnConfirmar" onclick="confirmar()">Confirmar solicitud</button>
+      <button class="btn btn-secundario" onclick="goTo('p2')">Atrás</button>
+    </div>
+  </section>
+
+  <!-- PANTALLA 4: CONFIRMACION -->
+  <section id="p4" class="pantalla">
+    <div class="card" style="text-align:center;">
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+      </div>
+
+      <div class="icon-check">✓</div>
+      <h1 style="margin-bottom: 6px;">¡Solicitud recibida!</h1>
+      <p class="subtitle">Pronto te enviaremos un mensaje por WhatsApp confirmando el día y la hora exacta de tu toma.</p>
+
+      <div class="resumen-cita" style="text-align:left;">
+        <div class="fila"><span class="key">Cotización</span><span class="val" id="cnfCode">-</span></div>
+        <div class="fila"><span class="key">Días solicitados</span><span class="val" id="cnfDays">-</span></div>
+        <div class="fila"><span class="key">Franja</span><span class="val" id="cnfSlot">-</span></div>
+        <div class="fila"><span class="key">Total a pagar</span><span class="val" id="cnfTotal">-</span></div>
+      </div>
+
+      <div class="nota">
+        💬 Te contactaremos al <strong id="cnfPhone">-</strong> para confirmar.
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────
+const PROXY_URL = 'https://domitest-proxy.vercel.app';
+
+// ── STATE ──────────────────────────────────────────────────────
+let quote = null;
+let selectedDates = [];     // array de strings YYYY-MM-DD
+let selectedSlot = null;    // 'morning' | 'noon' | 'afternoon'
+let selectedPayment = null; // 'cash' | 'transfer'
+
+// ── INIT ───────────────────────────────────────────────────────
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const code = (params.get('code') || '').trim().toUpperCase();
+
+  if (!code) {
+    showError('Falta el código de cotización en el link.');
+    return;
+  }
+
+  try {
+    const res = await fetch(PROXY_URL + '/api/quotes/' + encodeURIComponent(code));
+    if (res.status === 404) {
+      showError('No encontramos una cotización con código ' + code + '.');
+      return;
+    }
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    quote = await res.json();
+    renderQuote();
+    generarDias();
+    goTo('p1');
+  } catch (err) {
+    showError('Tuvimos un problema cargando tu cotización. Inténtalo de nuevo en un momento.');
+  }
+}
+
+// ── RENDER COTIZACION ──────────────────────────────────────────
+function renderQuote() {
+  const firstName = (quote.patient_name || '').trim().split(' ')[0];
+  document.getElementById('welcomeTitle').textContent = firstName ? 'Hola ' + firstName : 'Hola';
+  document.getElementById('quoteCode').textContent = quote.code;
+
+  const list = document.getElementById('examList');
+  list.innerHTML = '';
+  (quote.exams || []).forEach(e => {
+    const li = document.createElement('li');
+    const name = document.createElement('span');
+    name.className = 'ex-name';
+    name.textContent = e.name;
+    const price = document.createElement('span');
+    price.className = 'ex-price';
+    price.textContent = formatCOP(e.price);
+    li.appendChild(name); li.appendChild(price);
+    list.appendChild(li);
+  });
+
+  document.getElementById('subtotalExams').textContent = formatCOP(quote.subtotal_exams || 0);
+  document.getElementById('zoneName').textContent = quote.zone_name || '-';
+  document.getElementById('zonePrice').textContent = formatCOP(quote.zone_price || 0);
+  document.getElementById('totalAmount').textContent = formatCOP(quote.total || 0);
+
+  if (quote.needs_fasting) document.getElementById('fastingWarn').style.display = 'block';
+
+  // Pre-llenar datos si la cotización los trae
+  if (quote.patient_name) document.getElementById('patName').value = quote.patient_name;
+  if (quote.patient_doc) document.getElementById('patDoc').value = quote.patient_doc;
+  if (quote.patient_phone) document.getElementById('patPhone1').value = quote.patient_phone;
+}
+
+// ── DAYS GRID ──────────────────────────────────────────────────
+function generarDias() {
+  const grid = document.getElementById('diasGrid');
+  grid.innerHTML = '';
+  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const hoy = new Date();
+  for (let i = 1; i <= 10; i++) {
+    const d = new Date(hoy);
+    d.setDate(hoy.getDate() + i);
+    const iso = d.toISOString().split('T')[0];
+    const chip = document.createElement('div');
+    chip.className = 'dia-chip';
+    chip.dataset.date = iso;
+    chip.innerHTML = '<div class="dia-nombre">' + dias[d.getDay()] + '</div>' +
+                     '<div class="dia-numero">' + d.getDate() + '</div>' +
+                     '<div class="dia-mes">' + meses[d.getMonth()] + '</div>';
+    chip.onclick = () => toggleDia(chip);
+    grid.appendChild(chip);
+  }
+}
+
+function toggleDia(chip) {
+  const iso = chip.dataset.date;
+  if (chip.classList.contains('selected')) {
+    chip.classList.remove('selected');
+    selectedDates = selectedDates.filter(d => d !== iso);
+  } else {
+    chip.classList.add('selected');
+    selectedDates.push(iso);
+  }
+}
+
+function seleccionarFranja(el) {
+  document.querySelectorAll('.franja-opcion').forEach(f => f.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSlot = el.dataset.slot;
+}
+
+function seleccionarPago(el) {
+  document.querySelectorAll('.pago-opcion').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayment = el.dataset.pay;
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────
+function goTo(id) {
+  document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+  document.getElementById(id).classList.add('activa');
+  window.scrollTo(0, 0);
+}
+
+function showError(msg) {
+  document.getElementById('errorMsg').textContent = msg;
+  goTo('error');
+}
+
+// ── VALIDATIONS ────────────────────────────────────────────────
+function continuarP3() {
+  if (selectedDates.length === 0) {
+    alert('Por favor elige al menos un día.');
+    return;
+  }
+  if (!selectedSlot) {
+    alert('Por favor elige una franja horaria.');
+    return;
+  }
+  goTo('p3');
+}
+
+function validarDatos() {
+  const required = [
+    ['patName', 'tu nombre completo'],
+    ['patDoc', 'tu documento de identidad'],
+    ['patBirth', 'tu fecha de nacimiento'],
+    ['patAddress', 'tu dirección completa'],
+    ['patPhone1', 'tu teléfono principal']
+  ];
+  for (const [id, label] of required) {
+    const v = (document.getElementById(id).value || '').trim();
+    if (!v) {
+      alert('Por favor escribe ' + label + '.');
+      document.getElementById(id).focus();
+      return false;
+    }
+  }
+  if (!selectedPayment) {
+    alert('Por favor elige la forma de pago.');
+    return false;
+  }
+  // Validación básica del teléfono (mínimo 7 dígitos)
+  const phone = document.getElementById('patPhone1').value.replace(/\D/g, '');
+  if (phone.length < 7) {
+    alert('El teléfono parece incorrecto. Verifica el número.');
+    return false;
+  }
+  return true;
+}
+
+// ── CONFIRMAR ─────────────────────────────────────────────────
+async function confirmar() {
+  if (!validarDatos()) return;
+
+  const btn = document.getElementById('btnConfirmar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  const payload = {
+    quote_code: quote.code,
+    preferred_dates: selectedDates,
+    preferred_slot: selectedSlot,
+    patient_name: document.getElementById('patName').value.trim(),
+    patient_doc: document.getElementById('patDoc').value.trim(),
+    patient_birthdate: document.getElementById('patBirth').value || null,
+    patient_address: document.getElementById('patAddress').value.trim(),
+    patient_phone1: document.getElementById('patPhone1').value.trim(),
+    patient_phone2: document.getElementById('patPhone2').value.trim() || null,
+    payment_method: selectedPayment
+  };
+
+  try {
+    const res = await fetch(PROXY_URL + '/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || ('HTTP ' + res.status));
+    }
+    mostrarConfirmacion(payload);
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Confirmar solicitud';
+    alert('No pudimos guardar tu solicitud: ' + err.message + '\nPor favor intenta de nuevo o escríbenos por WhatsApp.');
+  }
+}
+
+function mostrarConfirmacion(payload) {
+  document.getElementById('cnfCode').textContent = quote.code;
+  document.getElementById('cnfDays').textContent = formatDays(selectedDates);
+  document.getElementById('cnfSlot').textContent = slotLabel(selectedSlot);
+  document.getElementById('cnfTotal').textContent = formatCOP(quote.total || 0);
+  document.getElementById('cnfPhone').textContent = payload.patient_phone1;
+  goTo('p4');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function formatCOP(n) {
+  return '$' + (parseInt(n) || 0).toLocaleString('es-CO');
+}
+
+function slotLabel(slot) {
+  return { morning: 'Mañana', noon: 'Mediodía', afternoon: 'Tarde' }[slot] || slot;
+}
+
+function formatDays(dates) {
+  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return dates.map(iso => {
+    const [y,m,d] = iso.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    return dias[dt.getDay()] + ' ' + d + ' ' + meses[m - 1];
+  }).join(', ');
+}
+
+// Ready
+init();
+</script>
+
+</body>
+</html>
