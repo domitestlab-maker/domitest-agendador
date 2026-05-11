@@ -31,8 +31,8 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Texto 30% más grande globalmente (1rem = 20.8px en lugar de 16px) */
-  html { font-size: 130%; }
+  /* Texto un poco más grande globalmente (1rem ≈ 17.6px en lugar de 16px) */
+  html { font-size: 110%; }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -46,13 +46,17 @@
   /* HEADER */
   header {
     background: var(--white);
-    padding: 18px 20px;
+    padding: 10px 20px;
     box-shadow: var(--shadow);
     display: flex;
     justify-content: center;
     align-items: center;
   }
-  header img { height: 64px; }
+  header img {
+    height: 100px;
+    max-width: 90%;
+    object-fit: contain;
+  }
 
   /* CONTAINER */
   .container {
@@ -172,11 +176,9 @@
   .totals .row { display: flex; justify-content: space-between; }
   .totals .row.total {
     font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--green-dark);
-    margin-top: 6px;
-    padding-top: 8px;
-    border-top: 2px solid var(--green);
+    font-size: 1.05rem;
+    color: var(--blue-dark);
+    margin-top: 4px;
   }
 
   /* WARN */
@@ -522,10 +524,6 @@
         </div>
       </div>
 
-      <div class="warn" id="fastingWarn" style="display:none;">
-        <strong>⚠ Ayuno requerido:</strong> Algunos de tus exámenes requieren ayuno de 8 a 12 horas. Solo puedes tomar agua durante ese tiempo.
-      </div>
-
       <button class="btn btn-verde btn-cta" onclick="goTo('p2')">Comenzar agendamiento</button>
     </div>
   </section>
@@ -695,7 +693,7 @@ function renderQuote() {
     const li = document.createElement('li');
     const name = document.createElement('span');
     name.className = 'ex-name';
-    name.textContent = e.name;
+    name.textContent = formatExamName(e.name);
     const price = document.createElement('span');
     price.className = 'ex-price';
     price.textContent = formatCOP(e.price);
@@ -707,8 +705,6 @@ function renderQuote() {
   document.getElementById('zoneName').textContent = quote.zone_name || '-';
   document.getElementById('zonePrice').textContent = formatCOP(quote.zone_price || 0);
   document.getElementById('totalAmount').textContent = formatCOP(quote.total || 0);
-
-  if (quote.needs_fasting) document.getElementById('fastingWarn').style.display = 'block';
 
   // Pre-llenar datos si la cotización los trae
   if (quote.patient_name) document.getElementById('patName').value = quote.patient_name;
@@ -866,6 +862,13 @@ function mostrarConfirmacion(payload) {
 // ── HELPERS ───────────────────────────────────────────────────
 function formatCOP(n) {
   return '$' + (parseInt(n) || 0).toLocaleString('es-CO');
+}
+
+// Convierte "HEMOGRAMA" → "Hemograma", "GLUCOSA EN SUERO" → "Glucosa en suero"
+function formatExamName(name) {
+  if (!name) return '';
+  const lower = name.toLowerCase();
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
 }
 
 function slotLabel(slot) {
