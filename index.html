@@ -891,11 +891,9 @@ function formatCOP(n) {
   return '$' + (parseInt(n) || 0).toLocaleString('es-CO');
 }
 
-// Convierte "HEMOGRAMA" → "Hemograma", "GLUCOSA EN SUERO" → "Glucosa en suero"
+// Nombres de exámenes siempre en MAYÚSCULA (estándar de laboratorio)
 function formatExamName(name) {
-  if (!name) return '';
-  const lower = name.toLowerCase();
-  return lower.charAt(0).toUpperCase() + lower.slice(1);
+  return (name || '').toUpperCase();
 }
 
 function formatDays(dates) {
