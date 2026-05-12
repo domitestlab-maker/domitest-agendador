@@ -196,15 +196,15 @@
   /* FORM */
   label.field-label {
     display: block;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 6px;
-    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 7px;
+    font-size: 0.98rem;
   }
   label.field-label .opt {
     color: var(--text-muted);
     font-weight: 400;
-    font-size: 0.78rem;
+    font-size: 0.82rem;
   }
   input[type="text"], input[type="tel"], input[type="date"], textarea {
     width: 100%;
@@ -224,83 +224,91 @@
   }
   textarea { resize: vertical; min-height: 70px; }
 
-  /* DAY CHIPS */
-  .dias-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
-    gap: 8px;
-    margin-bottom: 18px;
-  }
-  .dia-chip {
-    padding: 10px 6px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.15s;
-    background: var(--white);
-    user-select: none;
-  }
-  .dia-chip:hover { border-color: var(--blue); }
-  .dia-chip.selected {
-    background: var(--blue);
-    border-color: var(--blue);
-    color: var(--white);
-  }
-  .dia-chip .dia-nombre {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-bottom: 2px;
-    letter-spacing: 0.04em;
-  }
-  .dia-chip.selected .dia-nombre { color: rgba(255,255,255,0.85); }
-  .dia-chip .dia-numero {
-    font-family: 'Sora', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-  }
-  .dia-chip .dia-mes {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-  .dia-chip.selected .dia-mes { color: rgba(255,255,255,0.85); }
-
-  /* SLOT OPTIONS */
-  .franjas {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-bottom: 18px;
-  }
-  .franja-opcion {
-    padding: 13px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-    background: var(--white);
+  /* CALENDAR */
+  .cal-month-nav {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: 12px;
   }
-  .franja-opcion:hover { border-color: var(--blue); }
-  .franja-opcion.selected {
-    border-color: var(--blue);
+  .cal-month-name {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--blue-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cal-nav-btn {
+    background: var(--blue-light);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    color: var(--blue-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    line-height: 1;
+    transition: background 0.15s;
+  }
+  .cal-nav-btn:hover { background: var(--blue); color: var(--white); }
+  .cal-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; background: var(--blue-light); color: var(--blue-dark); }
+
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+  .cal-weekdays div {
+    text-align: center;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    font-weight: 700;
+    padding: 6px 0;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 22px;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--blue);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .cal-day:hover:not(.disabled):not(.selected):not(.empty) {
     background: var(--blue-light);
   }
-  .franja-icono {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: var(--blue-light);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1rem; flex-shrink: 0;
+  .cal-day.disabled {
+    color: var(--border);
+    cursor: not-allowed;
   }
-  .franja-opcion.selected .franja-icono { background: var(--blue); color: var(--white); }
-  .franja-info { flex: 1; }
-  .franja-nombre { font-weight: 700; color: var(--text); margin-bottom: 2px; font-size: 0.93rem; }
-  .franja-horas { font-size: 0.78rem; color: var(--text-muted); }
+  .cal-day.selected {
+    background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+    color: var(--white);
+    box-shadow: 0 2px 6px rgba(91,154,184,0.35);
+  }
+  .cal-day.empty { cursor: default; }
+  .cal-day.today:not(.selected) {
+    box-shadow: inset 0 0 0 2px var(--green);
+  }
 
   /* PAGO */
   .pago-opciones {
@@ -528,7 +536,7 @@
     </div>
   </section>
 
-  <!-- PANTALLA 2: PREFERENCIAS -->
+  <!-- PANTALLA 2: ELEGIR DÍA -->
   <section id="p2" class="pantalla">
     <div class="card">
       <div class="step-indicator">
@@ -538,38 +546,20 @@
         <div class="step-dot"></div>
       </div>
 
-      <h2>¿Cuándo te gustaría?</h2>
-      <p class="subtitle-left">Elige uno o más días que te sirvan. Te confirmaremos el día y hora exacta por WhatsApp.</p>
+      <h2 style="text-transform: uppercase; letter-spacing: 0.04em;">Elige tu día</h2>
+      <p class="subtitle-left">Selecciona los días en los que podrías recibir la visita de nuestro auxiliar de enfermería. Verificaremos la disponibilidad y te confirmaremos la hora exacta por WhatsApp.</p>
 
-      <label class="field-label">Días que te sirven</label>
-      <div class="dias-grid" id="diasGrid"></div>
-
-      <label class="field-label">Franja horaria preferida</label>
-      <div class="franjas">
-        <div class="franja-opcion" data-slot="morning" onclick="seleccionarFranja(this)">
-          <div class="franja-icono">🌅</div>
-          <div class="franja-info">
-            <div class="franja-nombre">Mañana</div>
-            <div class="franja-horas">6:00 AM – 11:00 AM</div>
-          </div>
-        </div>
-        <div class="franja-opcion" data-slot="noon" onclick="seleccionarFranja(this)">
-          <div class="franja-icono">☀️</div>
-          <div class="franja-info">
-            <div class="franja-nombre">Mediodía</div>
-            <div class="franja-horas">11:00 AM – 2:00 PM</div>
-          </div>
-        </div>
-        <div class="franja-opcion" data-slot="afternoon" onclick="seleccionarFranja(this)">
-          <div class="franja-icono">🌙</div>
-          <div class="franja-info">
-            <div class="franja-nombre">Tarde</div>
-            <div class="franja-horas">2:00 PM – 6:00 PM</div>
-          </div>
-        </div>
+      <div class="cal-month-nav">
+        <button class="cal-nav-btn" id="prevMonth" onclick="prevMonth()" aria-label="Mes anterior">‹</button>
+        <div class="cal-month-name" id="monthName">—</div>
+        <button class="cal-nav-btn" id="nextMonth" onclick="nextMonth()" aria-label="Mes siguiente">›</button>
       </div>
+      <div class="cal-weekdays">
+        <div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
 
-      <button class="btn btn-primario" onclick="continuarP3()">Continuar</button>
+      <button class="btn btn-verde btn-cta" onclick="continuarP3()">Continuar</button>
       <button class="btn btn-secundario" onclick="goTo('p1')">Atrás</button>
     </div>
   </section>
@@ -584,14 +574,14 @@
         <div class="step-dot"></div>
       </div>
 
-      <h2>Tus datos</h2>
-      <p class="subtitle-left">Necesitamos esta información para que el auxiliar llegue a tu casa.</p>
+      <h2 style="text-transform: uppercase; letter-spacing: 0.04em;">Tus datos</h2>
+      <p class="subtitle-left">Necesitamos esta información para que nuestro auxiliar de enfermería pueda dirigirse a tu domicilio.</p>
 
       <label class="field-label">Nombre completo *</label>
-      <input type="text" id="patName" placeholder="María Pérez García" autocomplete="name">
+      <input type="text" id="patName" placeholder="Nombre y apellido" autocomplete="name">
 
       <label class="field-label">Documento de identidad *</label>
-      <input type="text" id="patDoc" placeholder="1.234.567.890" inputmode="numeric">
+      <input type="text" id="patDoc" placeholder="1234567890" inputmode="numeric">
 
       <label class="field-label">Fecha de nacimiento *</label>
       <input type="date" id="patBirth">
@@ -611,7 +601,7 @@
         <div class="pago-opcion" data-pay="transfer" onclick="seleccionarPago(this)">📱 Transferencia</div>
       </div>
 
-      <button class="btn btn-verde" id="btnConfirmar" onclick="confirmar()">Confirmar solicitud</button>
+      <button class="btn btn-verde btn-cta" id="btnConfirmar" onclick="confirmar()">Confirmar solicitud</button>
       <button class="btn btn-secundario" onclick="goTo('p2')">Atrás</button>
     </div>
   </section>
@@ -628,17 +618,16 @@
 
       <div class="icon-check">✓</div>
       <h1 style="margin-bottom: 6px;">¡Solicitud recibida!</h1>
-      <p class="subtitle">Pronto te enviaremos un mensaje por WhatsApp confirmando el día y la hora exacta de tu toma.</p>
+      <p class="subtitle">En breve recibirás un mensaje por WhatsApp con la confirmación del día y la hora exacta de tu toma de muestras a domicilio.</p>
 
       <div class="resumen-cita" style="text-align:left;">
         <div class="fila"><span class="key">Cotización</span><span class="val" id="cnfCode">-</span></div>
         <div class="fila"><span class="key">Días solicitados</span><span class="val" id="cnfDays">-</span></div>
-        <div class="fila"><span class="key">Franja</span><span class="val" id="cnfSlot">-</span></div>
         <div class="fila"><span class="key">Total a pagar</span><span class="val" id="cnfTotal">-</span></div>
       </div>
 
       <div class="nota">
-        💬 Te contactaremos al <strong id="cnfPhone">-</strong> para confirmar.
+        💬 Te contactaremos al <strong id="cnfPhone" style="color: var(--green-dark);">-</strong> para confirmar.
       </div>
     </div>
   </section>
@@ -652,8 +641,8 @@ const PROXY_URL = 'https://domitest-proxy.vercel.app';
 // ── STATE ──────────────────────────────────────────────────────
 let quote = null;
 let selectedDates = [];     // array de strings YYYY-MM-DD
-let selectedSlot = null;    // 'morning' | 'noon' | 'afternoon'
 let selectedPayment = null; // 'cash' | 'transfer'
+let calYear, calMonth;      // mes/año mostrado en el calendario
 
 // ── INIT ───────────────────────────────────────────────────────
 async function init() {
@@ -674,7 +663,7 @@ async function init() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     quote = await res.json();
     renderQuote();
-    generarDias();
+    initCalendar();
     goTo('p1');
   } catch (err) {
     showError('Tuvimos un problema cargando tu cotización. Inténtalo de nuevo en un momento.');
@@ -712,43 +701,87 @@ function renderQuote() {
   if (quote.patient_phone) document.getElementById('patPhone1').value = quote.patient_phone;
 }
 
-// ── DAYS GRID ──────────────────────────────────────────────────
-function generarDias() {
-  const grid = document.getElementById('diasGrid');
-  grid.innerHTML = '';
-  const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const hoy = new Date();
-  for (let i = 1; i <= 10; i++) {
-    const d = new Date(hoy);
-    d.setDate(hoy.getDate() + i);
-    const iso = d.toISOString().split('T')[0];
-    const chip = document.createElement('div');
-    chip.className = 'dia-chip';
-    chip.dataset.date = iso;
-    chip.innerHTML = '<div class="dia-nombre">' + dias[d.getDay()] + '</div>' +
-                     '<div class="dia-numero">' + d.getDate() + '</div>' +
-                     '<div class="dia-mes">' + meses[d.getMonth()] + '</div>';
-    chip.onclick = () => toggleDia(chip);
-    grid.appendChild(chip);
-  }
+// ── CALENDAR ───────────────────────────────────────────────────
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+function initCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  renderCalendar();
 }
 
-function toggleDia(chip) {
-  const iso = chip.dataset.date;
-  if (chip.classList.contains('selected')) {
-    chip.classList.remove('selected');
+function renderCalendar() {
+  document.getElementById('monthName').textContent = MESES[calMonth] + ' ' + calYear;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  // 0=Dom..6=Sáb → ajustamos a Lun=0..Dom=6
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  for (let i = 0; i < startOffset; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  const lastDay = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  for (let d = 1; d <= lastDay; d++) {
+    const date = new Date(calYear, calMonth, d);
+    const iso = formatISO(date);
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    cell.textContent = d;
+    cell.dataset.date = iso;
+
+    if (date < today) {
+      cell.classList.add('disabled');
+    } else {
+      cell.onclick = () => toggleDia(cell);
+      if (selectedDates.includes(iso)) cell.classList.add('selected');
+    }
+    if (date.getTime() === today.getTime()) cell.classList.add('today');
+
+    grid.appendChild(cell);
+  }
+
+  // Bloquear prev si estamos en el mes actual
+  const now = new Date();
+  const isCurrentMonth = (calYear === now.getFullYear() && calMonth === now.getMonth());
+  document.getElementById('prevMonth').disabled = isCurrentMonth;
+}
+
+function prevMonth() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function nextMonth() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function toggleDia(cell) {
+  const iso = cell.dataset.date;
+  if (cell.classList.contains('selected')) {
+    cell.classList.remove('selected');
     selectedDates = selectedDates.filter(d => d !== iso);
   } else {
-    chip.classList.add('selected');
+    cell.classList.add('selected');
     selectedDates.push(iso);
   }
 }
 
-function seleccionarFranja(el) {
-  document.querySelectorAll('.franja-opcion').forEach(f => f.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedSlot = el.dataset.slot;
+function formatISO(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
 }
 
 function seleccionarPago(el) {
@@ -773,10 +806,6 @@ function showError(msg) {
 function continuarP3() {
   if (selectedDates.length === 0) {
     alert('Por favor elige al menos un día.');
-    return;
-  }
-  if (!selectedSlot) {
-    alert('Por favor elige una franja horaria.');
     return;
   }
   goTo('p3');
@@ -822,7 +851,6 @@ async function confirmar() {
   const payload = {
     quote_code: quote.code,
     preferred_dates: selectedDates,
-    preferred_slot: selectedSlot,
     patient_name: document.getElementById('patName').value.trim(),
     patient_doc: document.getElementById('patDoc').value.trim(),
     patient_birthdate: document.getElementById('patBirth').value || null,
@@ -853,7 +881,6 @@ async function confirmar() {
 function mostrarConfirmacion(payload) {
   document.getElementById('cnfCode').textContent = quote.code;
   document.getElementById('cnfDays').textContent = formatDays(selectedDates);
-  document.getElementById('cnfSlot').textContent = slotLabel(selectedSlot);
   document.getElementById('cnfTotal').textContent = formatCOP(quote.total || 0);
   document.getElementById('cnfPhone').textContent = payload.patient_phone1;
   goTo('p4');
@@ -869,10 +896,6 @@ function formatExamName(name) {
   if (!name) return '';
   const lower = name.toLowerCase();
   return lower.charAt(0).toUpperCase() + lower.slice(1);
-}
-
-function slotLabel(slot) {
-  return { morning: 'Mañana', noon: 'Mediodía', afternoon: 'Tarde' }[slot] || slot;
 }
 
 function formatDays(dates) {
