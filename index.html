@@ -482,9 +482,16 @@
 </head>
 <body>
 
-<header>
+<header id="brandHeader">
   <img src="logo.png" alt="Domitest">
 </header>
+<script>
+  // Si está embebido en otra página (ej. domitest.com.co), ocultar el header propio
+  // para evitar logo duplicado.
+  if (window.self !== window.top) {
+    document.getElementById('brandHeader').style.display = 'none';
+  }
+</script>
 
 <main class="container">
 
