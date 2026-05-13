@@ -486,10 +486,13 @@
   <img src="logo.png" alt="Domitest">
 </header>
 <script>
-  // Si está embebido en otra página (ej. domitest.com.co), ocultar el header propio
-  // para evitar logo duplicado.
+  // Si está embebido en otra página (ej. domitest.com.co):
+  //  - Ocultar el header propio para evitar logo duplicado
+  //  - Quitar min-height 100vh del body para que el iframe se ajuste al contenido real
   if (window.self !== window.top) {
     document.getElementById('brandHeader').style.display = 'none';
+    document.documentElement.style.minHeight = '0';
+    document.body.style.minHeight = '0';
   }
 </script>
 
