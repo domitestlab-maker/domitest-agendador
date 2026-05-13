@@ -918,23 +918,6 @@ function formatDays(dates) {
 
 // Ready
 init();
-
-// Reporta su altura al padre (Hostinger) para que el iframe se ajuste
-function reportHeight() {
-  try {
-    const h = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight
-    );
-    parent.postMessage({ type: 'agendador-height', height: h }, '*');
-  } catch (e) {}
-}
-window.addEventListener('load', reportHeight);
-window.addEventListener('resize', reportHeight);
-if (window.ResizeObserver) {
-  new ResizeObserver(reportHeight).observe(document.body);
-}
-setInterval(reportHeight, 1000);
 </script>
 
 </body>
